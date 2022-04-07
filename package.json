@@ -1,0 +1,24 @@
+{
+  "name": "it122",
+  "version": "1.0.0",
+  "description": "it122 node app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/larsswenson/IT122-Spring22.git"
+  },
+  "keywords": [
+    "it122",
+    "spring",
+    "22"
+  ],
+  "author": "Lars Swenson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/larsswenson/IT122-Spring22/issues"
+  },
+  "homepage": "https://github.com/larsswenson/IT122-Spring22#readme"
+}
