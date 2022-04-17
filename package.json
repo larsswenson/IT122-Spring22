@@ -6,9 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "type": "module",
   "repository": {
-    "type": "git",
-    "url": "git+https://github.com/larsswenson/IT122-Spring22.git"
+  "type": "git",
+  "url": "git+https://github.com/larsswenson/IT122-Spring22.git"
   },
   "keywords": [
     "it122",
@@ -18,7 +19,7 @@
   "author": "Lars Swenson",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/larsswenson/IT122-Spring22/issues"
+  "url": "https://github.com/larsswenson/IT122-Spring22/issues"
   },
   "homepage": "https://github.com/larsswenson/IT122-Spring22#readme"
 }
