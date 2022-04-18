@@ -7,14 +7,16 @@
     ];
 
     const getAll = () => {
-        return guitars;
+        let string = JSON.stringify(guitars, null, 5);
+        return string;
     }
-
-    const getItem = (model) => {
-        return guitars.find((guitar) => {
-            return guitar.model === model;
-        });
-    } 
     
+    const getItem = (query) => {
+        return JSON.stringify(guitars.filter((guitar) => {
+        return guitar['model'] == query;
+        }));
+    } 
+
     export { getAll, getItem };
+    
 

@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "it122 node app",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "type": "module",
+  "scripts": {
+  "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "repository": {
   "type": "git",
   "url": "git+https://github.com/larsswenson/IT122-Spring22.git"
