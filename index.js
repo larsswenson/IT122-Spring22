@@ -1,12 +1,12 @@
 import { getAll, getItem } from './data.js';
 import http from 'http';
-//import { parse } from "querystring";
+import { parse } from "querystring";
 const PORT = 3000;
 const server = http.createServer((req,res) => {
-    //let url = req.url.split("?"); 
-    //let query = parse(url[1]);
+    let url_parts = req.url.split("?"); 
+    let query = parse(url_parts[1]);
     var path = req.url.toLowerCase();
-    switch(path) {
+    switch(url_parts[0]) {
         case '/':
             res.writeHead(200, {'Content-Type': 'text/plain'});
             res.write(getAll());
@@ -19,7 +19,7 @@ const server = http.createServer((req,res) => {
             break;
         case '/detail':
             res.writeHead(200, {'Content-Type': 'text/plain'});
-            res.write(getItem('telecaster'));
+            res.write(`Guitar model: ${query['model']}`);
             res.end();
             break;
         default:
