@@ -1,15 +1,25 @@
-const http = require("http");
-http.createServer((req,res) => {
+import { getAll, getItem } from './data.js';
+import http from 'http';
+import { parse } from "querystring";
+const PORT = 3000;
+const server = http.createServer((req,res) => {
+    let url_parts = req.url.split("?"); 
+    let query = parse(url_parts[1]);
     var path = req.url.toLowerCase();
-    switch(path) {
+    switch(url_parts[0]) {
         case '/':
             res.writeHead(200, {'Content-Type': 'text/plain'});
-            res.write("Lars' Home Page");
+            res.write(getAll());
             res.end();
             break;
         case '/about':
             res.writeHead(200, {'Content-Type': 'text/plain'});
-            res.write('About Lars');
+            res.write('About Lars')
+            res.end();
+            break;
+        case '/detail':
+            res.writeHead(200, {'Content-Type': 'text/plain'});
+            res.write(`Guitar model: ${query['model']}`);
             res.end();
             break;
         default:
@@ -17,4 +27,12 @@ http.createServer((req,res) => {
             res.end('Not found');
             break;
     }
-}).listen(process.env.PORT || 3000);
+}) 
+
+server.listen(PORT, (error)=>{
+    if(error){
+        console.log('Something went wrong.')
+    } else {
+        console.log(`Server is listening on port ${PORT}`)
+    }
+})
