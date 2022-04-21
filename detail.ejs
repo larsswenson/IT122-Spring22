@@ -1,0 +1,15 @@
+<html>
+    <body>
+        <a href="/">Home</a>
+        <h2>Guitar Details</h2>
+<% if (result) { %>
+    <li>model: <%= result.model %></li>
+    <li>make: <%= result.make %></li>
+    <li>type: <%= result.type %></li>
+    <li>year: <%= result.year %></li>
+<% } else { %>
+    not found
+<% } %>
+    </body>
+</html>
+

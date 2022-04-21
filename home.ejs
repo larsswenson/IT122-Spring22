@@ -1,0 +1,7 @@
+<h2>Home</h2>
+<hr>
+<h3>Guitars</h3>
+
+<% guitars.forEach(function(guitar) { %>
+    <li><a href = "/detail?model=<%= guitar.model %>"><%= guitar.model %></li>
+<% }); %>
