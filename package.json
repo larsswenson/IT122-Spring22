@@ -5,11 +5,11 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-  "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
-  "type": "git",
-  "url": "git+https://github.com/larsswenson/IT122-Spring22.git"
+    "type": "git",
+    "url": "git+https://github.com/larsswenson/IT122-Spring22.git"
   },
   "keywords": [
     "it122",
@@ -19,7 +19,12 @@
   "author": "Lars Swenson",
   "license": "ISC",
   "bugs": {
-  "url": "https://github.com/larsswenson/IT122-Spring22/issues"
+    "url": "https://github.com/larsswenson/IT122-Spring22/issues"
   },
-  "homepage": "https://github.com/larsswenson/IT122-Spring22#readme"
+  "homepage": "https://github.com/larsswenson/IT122-Spring22#readme",
+  "dependencies": {
+    "ejs": "^3.1.7",
+    "express": "^4.17.3",
+    "nodemon": "^2.0.15"
+  }
 }

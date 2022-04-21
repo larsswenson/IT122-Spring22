@@ -1,38 +1,52 @@
-import { getAll, getItem } from './data.js';
-import http from 'http';
-import { parse } from "querystring";
-const PORT = 3000;
-const server = http.createServer((req,res) => {
-    let url_parts = req.url.split("?"); 
-    let query = parse(url_parts[1]);
-    var path = req.url.toLowerCase();
-    switch(url_parts[0]) {
-        case '/':
-            res.writeHead(200, {'Content-Type': 'text/plain'});
-            res.write(getAll());
-            res.end();
-            break;
-        case '/about':
-            res.writeHead(200, {'Content-Type': 'text/plain'});
-            res.write('About Lars')
-            res.end();
-            break;
-        case '/detail':
-            res.writeHead(200, {'Content-Type': 'text/plain'});
-            res.write(`Guitar model: ${query['model']}`);
-            res.end();
-            break;
-        default:
-            res.writeHead(404, {'Content-Type': 'text/plain'});
-            res.end('Not found');
-            break;
-    }
-}) 
+import * as guitar from './data.js';
+import express from 'express';
 
-server.listen(PORT, (error)=>{
-    if(error){
-        console.log('Something went wrong.')
-    } else {
-        console.log(`Server is listening on port ${PORT}`)
-    }
-})
+const app = express();
+app.set('port', process.env.PORT || 3000);
+app.use(express.static('./public')); // set location for static files
+app.use(express.urlencoded()); //Parse URL-encoded bodies
+app.use(express.json());
+app.set('view engine', 'ejs');
+
+// send static file as response
+app.get('/', (req,res) => {
+    res.type('text/html');
+    res.render('home', {guitars: guitar.getAll()});
+   });
+
+app.get('/delete', (req,res) => {
+    let result = guitar.deleteItem(req.query.model);
+    res.render('delete', {model: req.query.model, result: result})
+   });
+
+app.get('/detail', (req,res) => {
+    res.type('text/html');
+    console.log(req.query);
+    let result = guitar.getItem(req.query.model);
+    res.render('detail', {model: req.query.model, result: result});  
+   });
+
+// send plain text response
+app.get('/about', (req,res) => {
+    res.type('text/plain');
+    res.send('About page');
+   });
+
+app.post('/detail', (req,res) => {
+    console.log(req.body)
+    let found = guitar.getItem(req.body.model);
+    res.render("detail", {model: req.body.model, result: found, guitars: guitar.getAll()});
+   });
+
+// define 404 handler
+app.use((req,res) => {
+    res.type('text/plain');
+    res.status(404);
+    res.send('404 - Not found');
+   });
+
+app.listen(app.get('port'), () => {
+    console.log('Express started');
+   });
+
+
