@@ -1,4 +1,39 @@
 import * as guitar from './data.js';
+import http from 'http';
+import { parse } from "querystring";
+http.createServer((req,res) => {
+    var path = req.url.toLowerCase();
+    let url_parts = req.url.split("?");  // separate route from query string
+    let query = parse(url_parts[1]); // convert query string to a JS object 
+    
+
+    switch(url_parts[0]) {
+        case '/':
+            res.writeHead(200, {'Content-Type': 'text/plain'});
+            res.end(guitar.getAll());
+            break;
+        case '/about':
+            res.writeHead(200, {'Content-Type': 'text/plain'});
+            res.end("Lars' About Page");
+            break;
+        case '/detail':
+            res.writeHead(200, {'Content-Type': 'text/plain'});
+            res.end(guitar.getItem(query.model));
+            break;
+        default:
+            res.writeHead(404, {'Content-Type': 'text/plain'});
+            res.end('Error, page not found');
+            break;
+    }
+}).listen(process.env.PORT || 3000);
+
+
+
+
+
+
+
+/*import * as guitar from './data.js';
 import express from 'express';
 
 const app = express();
@@ -48,5 +83,5 @@ app.use((req,res) => {
 app.listen(app.get('port'), () => {
     console.log('Express started');
    });
-
+*/
 

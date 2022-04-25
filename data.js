@@ -7,13 +7,13 @@
     ];
 
     const getAll = () => {
-        return guitars;
+        return (JSON.stringify(guitars));
     }
     
     const getItem = (model) => {
-        return guitars.find((guitar) => {
+        return (JSON.stringify(guitars.find((guitar) => {
             return guitar.model === model; 
-            });
+            })));
     } 
   
 
