@@ -1,4 +1,4 @@
-import * as guitar from './data.js';
+/*import * as guitar from './data.js';
 import http from 'http';
 import { parse } from "querystring";
 http.createServer((req,res) => {
@@ -26,14 +26,9 @@ http.createServer((req,res) => {
             break;
     }
 }).listen(process.env.PORT || 3000);
+*/
 
-
-
-
-
-
-
-/*import * as guitar from './data.js';
+import * as guitar from './data.js';
 import express from 'express';
 
 const app = express();
@@ -83,5 +78,5 @@ app.use((req,res) => {
 app.listen(app.get('port'), () => {
     console.log('Express started');
    });
-*/
+
 
