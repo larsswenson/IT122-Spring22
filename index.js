@@ -8,7 +8,7 @@ app.set("port", process.env.PORT || 3000);
 app.use(express.static('./public')); // set location for static files
 app.use(express.urlencoded()); //Parse URL-encoded bodies
 app.use(express.json());
-app.use('/api', cors());
+app.use("/api", cors());
 app.set("view engine", "ejs");
 
 /*app.get("/", (req,res) => {
@@ -17,23 +17,38 @@ app.set("view engine", "ejs");
     res.render("home", {guitars: guitar.getAll()});
    });*/
 
-app.get('/api/guitars', (req,res) => {
+app.get("/", (req,res, next) => {
+    Guitar.find({}).lean()
+    .then((guitars) => {
+        res.render("new_home", {items: JSON.stringify(guitars)});
+    });
+});
+
+/*app.get('/api/guitars', (req,res,next) => {
     Guitar.find({}).lean()
         .then((guitars) => {
-            res.json(guitars)
+            res.render('new_home', {guitars});
+        })
+        .catch(err => next(err));
+});*/
+
+app.get("/detail", (req,res,next) => {
+    Guitar.findOne({ model:req.query.model }).lean()
+        .then((guitar) => {
+            res.render("detail", {result: guitar, model: req.query.model} );
         })
         .catch(err => next(err));
 });
 
-app.get('/api/guitars/:model', (req,res,next) => {
+/*app.get('/api/guitars/:model', (req,res,next) => {
     Guitar.findOne({ model:req.params.model }).lean()
         .then((guitar) => {
-            res.json(guitar)
+            res.render('detail', {result: guitar});
         })
         .catch(err => next(err));
-});
+});*/
 
-app.get('/api/guitars/delete/:model', (req,res) => {
+app.get("/api/guitars/delete/:model", (req,res) => {
     Guitar.deleteOne({ model:req.params.model }, (err, result) => {
         if (err) return next(err);
         console.log(result)
@@ -41,9 +56,9 @@ app.get('/api/guitars/delete/:model', (req,res) => {
     });
 });
 
-app.post('/api/guitars/add', (req,res,next) => {
-    const newGuitar = {'model':'starfire', 'make':'guild', 'type': 'electric semi-hollow body', 'year': '1960'}
-    Guitar.updateOne({'model':'starfire'}, newGuitar, {upsert:true}, (err, result) => {
+app.post("/api/guitars/add", (req,res,next) => {
+    const newGuitar = {"model":"starfire", "make":"guild", "type": "electric semi-hollow body", "year": "1960"}
+    Guitar.updateOne({"model":"starfire"}, newGuitar, {upsert:true}, (err, result) => {
         if (err) return next(err);
         console.log(result);
         res.json({"message": "guitar added"})
