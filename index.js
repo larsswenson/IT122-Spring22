@@ -20,14 +20,14 @@ app.set("view engine", "ejs");
 app.get("/", (req,res, next) => {
     Guitar.find({}).lean()
     .then((guitars) => {
-        res.render("new_home", {items: JSON.stringify(guitars)});
+        res.render("newhome", {items: JSON.stringify(guitars)});
     });
 });
 
 /*app.get('/api/guitars', (req,res,next) => {
     Guitar.find({}).lean()
         .then((guitars) => {
-            res.render('newhome', {guitars});
+            res.render('new_home', {guitars});
         })
         .catch(err => next(err));
 });*/
