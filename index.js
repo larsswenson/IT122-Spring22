@@ -20,7 +20,7 @@ app.set("view engine", "ejs");
 app.get("/", (req,res, next) => {
     Guitar.find({}).lean()
     .then((guitars) => {
-        res.render("newhome", {items: JSON.stringify(guitars)});
+        res.render("reacthome", {items: JSON.stringify(guitars)});
     });
 });
 
