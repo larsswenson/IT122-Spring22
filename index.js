@@ -27,7 +27,7 @@ app.get("/", (req,res, next) => {
 /*app.get('/api/guitars', (req,res,next) => {
     Guitar.find({}).lean()
         .then((guitars) => {
-            res.render('new_home', {guitars});
+            res.render('newhome', {guitars});
         })
         .catch(err => next(err));
 });*/
