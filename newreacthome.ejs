@@ -1,0 +1,86 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Guitars</title>
+
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  </head>
+  <body>
+
+<div id="root"></div>
+    <script type="text/babel">
+
+    const guitars = <%- guitars %>;
+    console.log(guitars)
+    
+    const Guitars = (props) => {
+        console.log(props)
+        const listGuitars = props.data.map((item) =>
+        <li key={item._id} id={item._id} onClick={props.clickHandler}>{item.model}</li>);
+        return <ul>{listGuitars}</ul>
+    }
+
+    const Detail = (props) => {
+        return <div>
+            <h3>Guitar Details</h3>
+              <form>
+                model: <input type="text" name="model" value={props.item.model || ""} onChange={props.onChange}/><br/>
+                make: <input type="text" name="make" value={props.item.make || ""} onChange={props.onChange}/><br/>
+                type: <input type="text" name="type" value={props.item.type || ""} onChange={props.onChange}/><br/>
+                year: <input type="text" name="year" value={props.item.year || ""} onChange={props.onChange}/><br/>
+              </form>
+            <button onClick={props.onClear}>clear</button>
+          </div>
+    }
+
+    class App extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {
+            items: <%- guitars %>,
+            current_item: {}
+        };
+        this.getDetail = this.getDetail.bind(this);
+        this.onChange = this.onChange.bind(this);
+        this.onClear = this.onClear.bind(this);
+      }
+
+    getDetail = (event) => {
+            const found = this.state.items.find((item) => {
+                return item.model === event.target.innerText;
+            });
+            this.setState({current_item: found})
+      }
+  
+    onChange = (event) => {
+              console.log(event.target)
+              const new_item = this.state.current_item;
+              new_item[event.target.name] = event.target.value;
+              console.log(new_item)
+              this.setState({"current_item": new_item})
+      }
+  
+    onClear = () => {
+              this.setState({"current_item": {}})
+      }
+  
+    render() {
+        return ( 
+          <div> 
+            <h1>Guitars</h1>
+            <Guitars data={this.state.items} clickHandler={this.getDetail}/>
+            <hr/>
+            <Detail item={this.state.current_item} onChange={this.onChange} onClear={this.onClear}/>  
+          </div>);
+      }
+    }
+
+    
+    ReactDOM.render( <App/>, document.getElementById("root"));
+
+    </script>
+  </body>
+</html>

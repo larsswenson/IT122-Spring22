@@ -1,4 +1,3 @@
-import * as guitar from "./data.js";
 import express from "express";
 import { Guitar } from "./Guitars.js";
 import cors from "cors";
@@ -20,14 +19,14 @@ app.set("view engine", "ejs");
 app.get("/", (req,res, next) => {
     Guitar.find({}).lean()
     .then((guitars) => {
-        res.render("reacthome", {items: JSON.stringify(guitars)});
+        res.render("newreacthome", {guitars: JSON.stringify(guitars)});
     });
 });
 
 /*app.get('/api/guitars', (req,res,next) => {
     Guitar.find({}).lean()
         .then((guitars) => {
-            res.render('new_home', {guitars});
+            res.render('reacthome', {guitars});
         })
         .catch(err => next(err));
 });*/
@@ -56,12 +55,11 @@ app.get("/api/guitars/delete/:model", (req,res) => {
     });
 });
 
-app.post("/api/guitars/add", (req,res,next) => {
-    const newGuitar = {"model":"starfire", "make":"guild", "type": "electric semi-hollow body", "year": "1960"}
-    Guitar.updateOne({"model":"starfire"}, newGuitar, {upsert:true}, (err, result) => {
+app.post('/api/guitars/add', (req,res,next) => {
+    Guitar.updateOne({"model":req.body.model}, req.body, {upsert:true}, (err, result) => {
         if (err) return next(err);
         console.log(result);
-        res.json({"message": "guitar added"})
+        res.json({"message": "guitar added"})        
     });
 });
 
@@ -81,6 +79,3 @@ app.use((req, res) => {
 app.listen(app.get("port"), () => {
     console.log("Express started");
    });
-
-
-
