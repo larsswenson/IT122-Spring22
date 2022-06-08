@@ -19,7 +19,7 @@ app.set("view engine", "ejs");
 app.get("/", (req,res, next) => {
     Guitar.find({}).lean()
     .then((guitars) => {
-        res.render("newreacthome", {guitars: JSON.stringify(guitars)});
+        res.render("newreacthome2", {guitars: JSON.stringify(guitars)});
     });
 });
 
@@ -39,35 +39,36 @@ app.get("/detail", (req,res,next) => {
         .catch(err => next(err));
 });
 
-/*app.get('/api/guitars/:model', (req,res,next) => {
-    Guitar.findOne({ model:req.params.model }).lean()
-        .then((guitar) => {
-            res.render('detail', {result: guitar});
-        })
-        .catch(err => next(err));
-});*/
-
-app.get("/api/guitars/delete/:model", (req,res) => {
-    Guitar.deleteOne({ model:req.params.model }, (err, result) => {
+app.get('/api/guitars/delete/:id', (req,res,next) => {
+    Guitar.deleteOne({"_id":req.params.id }, (err, result) => {
         if (err) return next(err);
-        console.log(result)
-        res.json({"message": "guitar deleted"})    
+        // return # of items deleted
+        res.json({"deleted": result});
     });
 });
 
-app.post('/api/guitars/add', (req,res,next) => {
-    Guitar.updateOne({"model":req.body.model}, req.body, {upsert:true}, (err, result) => {
-        if (err) return next(err);
-        console.log(result);
-        res.json({"message": "guitar added"})        
-    });
+app.post('/api/guitars/add/', (req,res,next) => {
+    if (!req.body._id) { 
+        let guitar = new Guitar(req.body);
+        guitar.save((err, newGuitar) => {
+            if (err) return next(err);
+            res.json({updated: 0, _id: newGuitar._id});
+        });
+    } else {
+        Guitar.updateOne({ _id: req.body._id}, {model:req.body.model, make: req.body.make, type: req.body.type, year: req.body.year}, (err, result) => {
+            if (err) return next(err);
+            res.json({updated: result.nModified, _id: req.body._id});
+        });
+    }
 });
 
-// send plain text response
-app.get("/about", (req, res) => {
-    res.type("text/plain");
-    res.send("About page");
-   });
+app.get('/api/guitars/add/:model/:make/:type/:year', (req,res, next) => {
+    let model = req.params.model;
+    Guitar.updateOne({ model: model}, {model:modle, make: req.params.make, type: req.params.type, year: req.params.year}, {upsert: true }, (err, result) => {
+        if (err) return next(err); 
+        res.json({updated: result.nModified});
+    });
+});
 
 // define 404 handler
 app.use((req, res) => {
@@ -79,3 +80,4 @@ app.use((req, res) => {
 app.listen(app.get("port"), () => {
     console.log("Express started");
    });
+

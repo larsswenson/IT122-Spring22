@@ -1,0 +1,132 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Guitars</title>
+
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  </head>
+  <body>
+
+<div id="root"></div>
+    <script type="text/babel">
+    
+    const Guitars = (props) => {
+        console.log(props)
+        const listGuitars = props.data.map((item) =>
+        <li key={item._id} id={item._id} onClick={props.clickHandler}>{item.model}</li>);
+        return <ul>{listGuitars}</ul>
+    }
+
+    const Detail = (props) => {
+        return <div>
+            <h3>Guitar Details</h3>
+              <form>
+                model: <input type="text" name="model" value={props.item.model || ""} onChange={props.handleChange}/><br/>
+                make: <input type="text" name="make" value={props.item.make || ""} onChange={props.handleChange}/><br/>
+                type: <input type="text" name="type" value={props.item.type || ""} onChange={props.handleChange}/><br/>
+                year: <input type="text" name="year" value={props.item.year || ""} onChange={props.handleChange}/><br/>
+              </form>
+            <button onClick={props.onSave}>save</button>  
+            <button onClick={props.onClear}>clear</button>
+            <button onClick={props.onDelete}>delete</button>
+          </div>
+    }
+
+    class App extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {
+            items: <%- guitars %>,
+            current_item: {}
+        };
+        this.getDetail = this.getDetail.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.onSave = this.onSave.bind(this);
+        this.onClear = this.onClear.bind(this);
+        this.onDelete = this.onDelete.bind(this);
+      }
+
+    getDetail = (event) => {
+            const found = this.state.items.find((item) => {
+            return item.model === event.target.innerText;
+            });
+            this.setState({current_item: found})
+      }
+  
+    handleChange = (event) => {
+            console.log(event.target)
+            let new_item = this.state.current_item;
+            new_item[event.target.name] = event.target.value;
+            console.log(new_item)
+            this.setState({current_item: new_item})
+      }
+
+    onClear = () => {
+            this.setState({current_item: {}})
+      }  
+
+    onSave = () => {
+            if (this.state.current_item == {}) 
+            return
+            let new_item = this.state.current_item;
+            fetch("/api/guitars/add/", {
+            method: "POST", 
+            headers: {"Content-Type": "application/json"}, 
+            body: JSON.stringify(new_item)
+})
+            .then(res => res.json())
+            .then((json) => {
+            console.log(json)
+                    
+        if (json.updated === 0) {
+            new_item._id = json._id
+            let new_list = this.state.items;
+            new_list.push(new_item);
+            this.setState({items: new_list});
+      }
+  });
+}
+    
+    onDelete = () => {
+    console.log(this.state.current_item)
+        if (this.state.current_item == {}) 
+        return
+            let delete_id = this.state.current_item._id
+            let url = "/api/guitars/delete/" + delete_id;
+            fetch(url)
+            .then(res => res.json())
+            .then((json) => {
+        if (json.deleted.deletedCount > 0) {
+            let new_list = this.state.items.filter(item => {
+        return item._id != delete_id;
+})
+            this.setState({items: new_list, current_item: {}})
+      }
+  })
+}
+
+    render() {
+        return ( 
+          <div> 
+            <h1>Guitars</h1>
+            <Guitars data={this.state.items} 
+            clickHandler={this.getDetail}/>
+            <hr/>
+            <Detail item={this.state.current_item} 
+            handleChange={this.handleChange} 
+            onSave={this.onSave} 
+            onClear={this.onClear}
+            onDelete={this.onDelete}/>
+          </div>);
+      }
+  }
+
+    
+    ReactDOM.render( <App/>, document.getElementById("root"));
+
+    </script>
+  </body>
+</html>
